@@ -29,7 +29,7 @@ Examine the two folders [backend](https://github.com/benedictweis/kubernetes-get
 
 A user request will be handled as follows:
 
-![architecture diagram](https://github.com/benedictweis/kubernetes-getting-started/blob/main/architecture.drawio.png)
+<img src="architecture.drawio.png" width=40%>
 
 ## What is kubernetes?
 
