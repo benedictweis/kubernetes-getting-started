@@ -1,11 +1,13 @@
 services:
   hello-app-service:
     build: ./backend/.
-    ports:
-      - 3000:3000
     environment:
         - PORT=3000
   hello-app-frontend:
     build: ./frontend/.
     ports:
       - 8080:80
+    environment:
+        - PORT=80
+        - SERVICE_PORT=3000
+        - SERVICE_HOSTNAME=hello-app-service
