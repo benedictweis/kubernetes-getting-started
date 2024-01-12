@@ -29,7 +29,7 @@ Examine the two folders [backend](https://github.com/benedictweis/kubernetes-get
 
 A user request will be handled as follows:
 
-<img src="architecture.drawio.png" width=40%>
+<img src="architecture.drawio.png" width=40% alt="architecture diagram">
 
 ## What is kubernetes?
 
@@ -37,7 +37,7 @@ Kubernetes is a container orchestrator. It manages communication between contain
 
 ### Kubernetes Components
 
-The biggest unit in kubernetes is the cluster. A cluster is made up of a collection of nodes (that are basically just worker machines). A node hosts a collection of pods which again are a collection of associated containers, although it is rather common that a pod only contains a single container. This container can be compared to a familiar docker container.
+The biggest unit in kubernetes is the cluster. A cluster is made up of a collection of nodes (which are basically just worker machines). A node hosts a collection of pods which again are a collection of associated containers, although it is rather common that a pod only contains a single container. This container can be compared to a familiar docker container.
 
 ## Obtaining a cluster
 
@@ -59,4 +59,40 @@ Staring a local kubernetes cluster with kind is as simple as running:
 kind create cluster
 ```
 
-We will be using an adapted version of this exact command later in this guide.
+For this demo, we need to create a slightly more specialized cluster. Create one by running
+
+```bash
+kind create cluster --config kind-config.yaml
+```
+
+or by using the Makefile (`make create-kind-cluster`).
+
+This creates a cluster with a name (`word-app-demo`) and a port forwarding configuration to access our application later in this guide.
+
+## Deploying the application
+
+To deploy the application, its services (ie. frontend and backend) have to be containerized first. Luckily, this example provides us with a Dockerfile for each component.
+
+### Building the images
+
+Issue
+
+```bash
+docker build -t word-app-frontend -f ./frontend/Dockerfile ./frontend
+docker build -t word-app-service -f ./backend/Dockerfile ./backend
+```
+
+to build the images locally.
+
+Next they have to be inserted into the kind cluster.
+
+### Loading the images into the kind cluster
+
+Issue
+
+```bash
+kind load docker-image word-app-frontend --name word-app-demo
+kind load docker-image word-app-service --name word-app-demo
+```
+
+to load the images into the kind cluster
