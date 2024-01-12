@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: word-app-config
+data:
+  words: "nicht,schlecht,oder"

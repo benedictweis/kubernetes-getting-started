@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 80
 const service_port = process.env.SERVICE_PORT || 3000
-const service_hostname = process.env.SERVICE_HOSTNAME || `hello-app-service`
+const service_hostname = process.env.SERVICE_HOSTNAME || `word-app-service`
 
 const page=`
 <!DOCTYPE html>
@@ -16,7 +16,7 @@ const page=`
 <body>
     <main class="container">
         <h1>Hello, your random word:</h1>
-        <span>{{WORD}}</span>
+        <article>{{WORD}}</article>
     </main>
 </body>
 </html>

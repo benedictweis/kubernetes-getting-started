@@ -1,18 +1,19 @@
 
-FRONTEND_IMAGE_NAME=hello-app-frontend
+FRONTEND_IMAGE_NAME=word-app-frontend
 FRONTEND_FOLDER=./frontend
 FRONTEND_DOCKERFILE=./frontend/Dockerfile
 
-BACKEND_IMAGE_NAME=hello-app-service
+BACKEND_IMAGE_NAME=word-app-service
 BACKEND_FOLDER=./backend
 BACKEND_DOCKERFILE=./backend/Dockerfile
 
 KIND_CLUSTER_CONFIG=./kind-config.yaml
-KIND_CLUSTER_NAME=hello-app-demo
+KIND_CLUSTER_NAME=word-app-demo
 KIND_KUBECONFIG=kind-kubeconfig.yaml
 
-FRONTEND_DEPLOYMENT=./deployments/deployment-frontend.yaml
-BACKEND_DEPLOYMENT=./deployments/deployment-backend.yaml
+CONFIGMAP=./deployments/configmap.yaml
+FRONTEND_DEPLOYMENT=./deployments/frontend.yaml
+BACKEND_DEPLOYMENT=./deployments/backend.yaml
 
 # Docker Compose setup
 
@@ -61,7 +62,11 @@ retrive-kubeconfig:
 	@echo "Retriving kubeconfig"
 	kind get kubeconfig --name $(KIND_CLUSTER_NAME) > $(KIND_KUBECONFIG)
 
-deploy:
-	@echo "Deploying to cluster"
-	kubectl apply -f $(FRONTEND_DEPLOYMENT)
-	kubectl apply -f $(BACKEND_DEPLOYMENT)
+apply-configmap:
+	@echo "Applying configmap to cluster..."
+	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(CONFIGMAP)
+
+apply-deployments:
+	@echo "Applying deployments to cluster..."
+	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(FRONTEND_DEPLOYMENT) 
+	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(BACKEND_DEPLOYMENT)
