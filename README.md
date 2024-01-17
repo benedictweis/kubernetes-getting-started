@@ -13,6 +13,7 @@ All of the shell commands mentioned in this document are meant to be run from th
 
 ### Software
 
+- Macos, Linux or Windows with [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)
 - [Docker](https://www.docker.com) for building images
 - [kind](https://kind.sigs.k8s.io) for setting up a local cluster
 - [kubectl](https://kubernetes.io/docs/reference/kubectl) for interacting with the cluster
