@@ -17,7 +17,7 @@ BACKEND_DEPLOYMENT=./deployments/backend.yaml
 
 EXPOSED_URL=http://localhost:8080
 
-all: kind-up apply-configmap apply-deployments open-url
+all: kind-up apply-configmap apply-deployments restart-deployments open-url
 
 kind-up: create-kind-cluster build-images load-images retrive-kubeconfig
 
@@ -30,7 +30,7 @@ build-images:
 
 create-kind-cluster:
 	@echo "Creating kind cluster"
-	kind create cluster --config $(KIND_CLUSTER_CONFIG)
+	kind create cluster --config $(KIND_CLUSTER_CONFIG) || echo "Warning: kind cluster is already present"
 
 delete-kind-cluster:
 	@echo "Deleting kind cluster"
@@ -54,6 +54,11 @@ apply-deployments:
 	@echo "Applying deployments to cluster..."
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(FRONTEND_DEPLOYMENT) 
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(BACKEND_DEPLOYMENT)
+
+restart-deployments:
+	@echo "Applying deployments to cluster..."
+	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(FRONTEND_DEPLOYMENT) | echo "Warning: restarting deployments failed"
+	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(BACKEND_DEPLOYMENT) | echo "Warning: restarting deployments failed"
 
 open-url:
 	@xdg-open http://localhost:8080 &> /dev/null || open http://localhost:8080 &> /dev/null
