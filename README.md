@@ -17,15 +17,15 @@ All of the shell commands mentioned in this document are meant to be run from th
 - [kind](https://kind.sigs.k8s.io) for setting up a local cluster
 - [kubectl](https://kubernetes.io/docs/reference/kubectl) for interacting with the cluster
 - Optional: [k9s](https://k9scli.io) for easier troubleshooting and for viewing the cluster
-- Optional: [gnu-make](https://www.gnu.org/software/make/) for using the provided [Makefile](https://github.com/benedictweis/kubernetes-getting-started/blob/main/Makefile)
+- Optional: [gnu-make](https://www.gnu.org/software/make/) for using the provided [Makefile](./Makefile)
 
 ## 🏁 Introduction
 
-Examine the two folders [backend](https://github.com/benedictweis/kubernetes-getting-started/tree/main/backend) and [frontend](https://github.com/benedictweis/kubernetes-getting-started/tree/main/frontend).
+Examine the two folders [backend](./backend/) and [frontend](./frontend/).
 
-[backend](https://github.com/benedictweis/kubernetes-getting-started/tree/main/backend) contains a nodejs application that exposes a `/hello` endpoint. The endpoint returns a random word from a predefined list each time it is called.
+[backend](./backend/) contains a nodejs application that exposes a `/hello` endpoint. The endpoint returns a random word from a predefined list each time it is called.
 
-[frontend](https://github.com/benedictweis/kubernetes-getting-started/tree/main/frontend) also contains a nodejs application that serves a website where a random word from [backend](https://github.com/benedictweis/kubernetes-getting-started/tree/main/backend) is presented to the user.
+[frontend](./frontend/) also contains a nodejs application that serves a website where a random word from [backend](./backend/) is presented to the user.
 
 A user request will be handled as follows:
 
@@ -95,4 +95,40 @@ kind load docker-image word-app-frontend --name word-app-demo
 kind load docker-image word-app-service --name word-app-demo
 ```
 
-to load the images into the kind cluster
+to load the images into the kind cluster.
+
+### Retrieve kubeconfig
+
+To interact with the kuberentes cluster via `kubectl` (and other similar tools). You need to retrive a so called `kubeconfig` from the cluster. It contains values such as the hostname of the cluster along with some keys for verifying authority when executing actions on the cluster.
+
+Retrieving your kubeconfig is usually a process that is specifiy to your provider (see [Obtaining a cluster](#obtaining-a-cluster)). In our case, kind provides an easy way of retrieving your kubeconfig:
+
+```bash
+kind get kubeconfig --name word-app-demo > kind-kubeconfig.yaml
+```
+
+Feel free to take a look at the kubeconfig.
+
+Finally, the `KUBECONFIG` environment variable has to be set to the retrieved kubeconfig, to let other tools know where to find your desired kubeconfig.
+
+Do this with
+
+```bash
+export KUBECONFIG=$PWD/kind-kubeconfig.yaml
+```
+
+### Applying the deployment
+
+There is only one step left, actually deploying the application. To do this, examine the files contained in [`./deployments/`](./deployments/). Focus on the [`./deployments/frontend.yaml`](./deployments/frontend.yaml) and [`./deployments/backend.yaml`](./deployments/backend.yaml) files. They will be explained later in this guide. For now we will simply apply these two files to our cluster.
+
+```bash
+kubectl apply -f ./deployments/frontend.yaml
+kubectl apply -f ./deployments/backend.yaml
+```
+
+At this point you can visit [localhost:8080](http://localhost:8080) and examine the running application.
+
+## Further learning
+
+- Kubernetes Tutorial for Beginners [Link](https://youtu.be/X48VuDVv0do)
+- Kubernetes Documentation [Link](https://kubernetes.io/docs/concepts/overview/)
