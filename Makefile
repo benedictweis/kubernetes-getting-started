@@ -15,25 +15,9 @@ CONFIGMAP=./deployments/configmap.yaml
 FRONTEND_DEPLOYMENT=./deployments/frontend.yaml
 BACKEND_DEPLOYMENT=./deployments/backend.yaml
 
-# Docker Compose setup
+EXPOSED_URL=http://localhost:8080
 
-compose-start: compose-build
-	@echo "Starting docker compose..."
-	@docker compose up -d
-
-compose-start-attach: compose-build
-	@echo "Starting docker compose..."
-	@docker compose up
-
-compose-build:
-	@echo "Building images for compose..."
-	@docker compose build
-
-compose-stop:
-	@echo "Stopping docker compose..."
-	@docker compose down
-
-# Kind setup
+all: kind-up apply-configmap apply-deployments open-url
 
 kind-up: create-kind-cluster build-images load-images retrive-kubeconfig
 
@@ -70,3 +54,6 @@ apply-deployments:
 	@echo "Applying deployments to cluster..."
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(FRONTEND_DEPLOYMENT) 
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(BACKEND_DEPLOYMENT)
+
+open-url:
+	@xdg-open http://localhost:8080 &> /dev/null || open http://localhost:8080 &> /dev/null
