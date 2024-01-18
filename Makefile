@@ -1,21 +1,18 @@
-
 FRONTEND_IMAGE_NAME=word-app-frontend
-FRONTEND_FOLDER=./frontend
-FRONTEND_DOCKERFILE=./frontend/Dockerfile
+FRONTEND=./frontend
 
 BACKEND_IMAGE_NAME=word-app-service
-BACKEND_FOLDER=./backend
-BACKEND_DOCKERFILE=./backend/Dockerfile
+BACKEND=./backend
 
 KIND_CLUSTER_CONFIG=./kind-config.yaml
-KIND_CLUSTER_NAME=word-app-demo
+KIND_CLUSTER_NAME=$(shell yq '.name' $(KIND_CLUSTER_CONFIG))
 KIND_KUBECONFIG=kind-kubeconfig.yaml
 
-MANIFESTS=./manifests/
+MANIFESTS=./manifests
 FRONTEND_DEPLOYMENT=./manifests/frontend.yaml
 BACKEND_DEPLOYMENT=./manifests/backend.yaml
 
-EXPOSED_URL=http://localhost:8080
+EXPOSED_URL=http://localhost:$(shell yq '.nodes.[0].extraPortMappings.[0].hostPort' $(KIND_CLUSTER_CONFIG))
 
 all: kind-up apply-manifests restart-deployments open-url
 
@@ -25,8 +22,8 @@ kind-down: delete-kind-cluster
 
 build-images:
 	@echo "Building images..."
-	docker build -t $(FRONTEND_IMAGE_NAME) -f $(FRONTEND_DOCKERFILE) $(FRONTEND_FOLDER)
-	docker build -t $(BACKEND_IMAGE_NAME) -f $(BACKEND_DOCKERFILE) $(BACKEND_FOLDER)
+	docker build -t $(FRONTEND_IMAGE_NAME) -f $(FRONTEND)/Dockerfile $(FRONTEND)
+	docker build -t $(BACKEND_IMAGE_NAME) -f $(BACKEND)/Dockerfile $(BACKEND)
 
 create-kind-cluster:
 	@echo "Creating kind cluster"
@@ -44,7 +41,7 @@ load-images:
 retrive-kubeconfig:
 	@echo "Retriving kubeconfig"
 	kind get kubeconfig --name $(KIND_CLUSTER_NAME) > $(KIND_KUBECONFIG)
-	@echo "To load the kubeconfig type export KUBECONFIG=\$$PWD/<path_to_kubeconfig>"
+	@echo "To load the kubeconfig type export KUBECONFIG=\$$PWD/$(KIND_KUBECONFIG)"
 
 apply-manifests: 
 	@echo "Applying manifests..."

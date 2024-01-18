@@ -10,6 +10,7 @@ All of the shell commands mentioned in this document are meant to be run from th
 
 - Basic knowledge of docker, mainly an understanding of images and containers
 - Basic knowledge of web development
+- Being able to use a terminal
 
 ### Software
 
@@ -74,6 +75,9 @@ This creates a cluster with a name (`word-app-demo`) and a port forwarding confi
 
 To deploy the application, its services (ie. frontend and backend) have to be containerized first. Luckily, this example provides us with a Dockerfile for each component.
 
+> [!TIP]
+> If you are not interested in deploying the application right away, feel free to skip ahead to the [concepts](#concepts) section.
+
 ### Building the images
 
 Issue
@@ -118,6 +122,9 @@ Do this with
 export KUBECONFIG=$PWD/kind-kubeconfig.yaml
 ```
 
+> [!CAUTION]
+> In a production environment, keep a good overview of your kubeconfigs, accidentally committing them to a public repository could leave an attacker with easy administrative access to your cluster. Be sure to use a timeout for kubeconfigs in a production environment.
+
 ### Applying the deployment
 
 There is only one step left, actually deploying the application. To do this, examine the files contained in [`./manifests/`](./manifests/). Focus on the [`./manifests/frontend.yaml`](./manifests/frontend.yaml) and [`./manifests/backend.yaml`](./manifests/backend.yaml) files. They will be explained later in this guide. For now we will simply apply the entire manifest folder to the cluster because it contains additional files that will also be explained later in this guide.
@@ -126,7 +133,16 @@ There is only one step left, actually deploying the application. To do this, exa
 kubectl apply -f ./manifests/
 ```
 
+> [!NOTE]
+> The order in which the manifests are applied is completely irrelevant. This is because of one of kubernetes core concepts, self healing.
+
 At this point you can visit [localhost:8080](http://localhost:8080) and examine the running application.
+
+Feel free to explore the [Makefile](./Makefile) to learn more about how easy deploying with kubernetes is.
+
+## Concepts
+
+Concepts section
 
 ## Further learning
 
