@@ -120,11 +120,11 @@ export KUBECONFIG=$PWD/kind-kubeconfig.yaml
 
 ### Applying the deployment
 
-There is only one step left, actually deploying the application. To do this, examine the files contained in [`./deployments/`](./deployments/). Focus on the [`./deployments/frontend.yaml`](./deployments/frontend.yaml) and [`./deployments/backend.yaml`](./deployments/backend.yaml) files. They will be explained later in this guide. For now we will simply apply these two files to our cluster.
+There is only one step left, actually deploying the application. To do this, examine the files contained in [`./manifests/`](./manifests/). Focus on the [`./manifests/frontend.yaml`](./manifests/frontend.yaml) and [`./manifests/backend.yaml`](./manifests/backend.yaml) files. They will be explained later in this guide. For now we will simply apply these two files to our cluster.
 
 ```bash
-kubectl apply -f ./deployments/frontend.yaml
-kubectl apply -f ./deployments/backend.yaml
+kubectl apply -f ./manifests/frontend.yaml
+kubectl apply -f ./manifests/backend.yaml
 ```
 
 At this point you can visit [localhost:8080](http://localhost:8080) and examine the running application.

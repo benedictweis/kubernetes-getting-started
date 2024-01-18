@@ -11,14 +11,14 @@ KIND_CLUSTER_CONFIG=./kind-config.yaml
 KIND_CLUSTER_NAME=word-app-demo
 KIND_KUBECONFIG=kind-kubeconfig.yaml
 
-CONFIGMAP=./deployments/configmap.yaml
-SECRET=./deployments/secret.yaml
-FRONTEND_DEPLOYMENT=./deployments/frontend.yaml
-BACKEND_DEPLOYMENT=./deployments/backend.yaml
+CONFIGMAP=./manifests/configmap.yaml
+SECRET=./manifests/secret.yaml
+FRONTEND_DEPLOYMENT=./manifests/frontend.yaml
+BACKEND_DEPLOYMENT=./manifests/backend.yaml
 
 EXPOSED_URL=http://localhost:8080
 
-all: kind-up apply-configmap apply-deployments restart-deployments open-url
+all: kind-up apply-configmap apply-manifests restart-manifests open-url
 
 kind-up: create-kind-cluster build-images load-images retrive-kubeconfig
 
@@ -55,15 +55,15 @@ apply-secret:
 	@echo "Applying configmap to cluster..."
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(SECRET)
 
-apply-deployments:
-	@echo "Applying deployments to cluster..."
+apply-manifests:
+	@echo "Applying manifests to cluster..."
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(FRONTEND_DEPLOYMENT) 
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(BACKEND_DEPLOYMENT)
 
-restart-deployments:
-	@echo "Applying deployments to cluster..."
-	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(FRONTEND_DEPLOYMENT) | echo "Warning: restarting deployments failed"
-	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(BACKEND_DEPLOYMENT) | echo "Warning: restarting deployments failed"
+restart-manifests:
+	@echo "Applying manifests to cluster..."
+	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(FRONTEND_DEPLOYMENT) | echo "Warning: restarting manifests failed"
+	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(BACKEND_DEPLOYMENT) | echo "Warning: restarting manifests failed"
 
 open-url:
 	@xdg-open http://localhost:8080 &> /dev/null || open http://localhost:8080 &> /dev/null
