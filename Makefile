@@ -12,6 +12,7 @@ KIND_CLUSTER_NAME=word-app-demo
 KIND_KUBECONFIG=kind-kubeconfig.yaml
 
 CONFIGMAP=./deployments/configmap.yaml
+SECRET=./deployments/secret.yaml
 FRONTEND_DEPLOYMENT=./deployments/frontend.yaml
 BACKEND_DEPLOYMENT=./deployments/backend.yaml
 
@@ -49,6 +50,10 @@ retrive-kubeconfig:
 apply-configmap:
 	@echo "Applying configmap to cluster..."
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(CONFIGMAP)
+
+apply-secret:
+	@echo "Applying configmap to cluster..."
+	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(SECRET)
 
 apply-deployments:
 	@echo "Applying deployments to cluster..."

@@ -41,12 +41,4 @@ spec:
               configMapKeyRef:
                 name: word-app-config
                 key: words
-        resources:
-          requests:
-            memory: "500M"
-            cpu: "1"
-          limits:
-            memory: "2G"
-            cpu: "2"
-          
         

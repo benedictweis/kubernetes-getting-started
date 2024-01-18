@@ -3,6 +3,7 @@ const app = express()
 const port = process.env.PORT || 80
 const service_port = process.env.SERVICE_PORT || 3000
 const service_hostname = process.env.SERVICE_HOSTNAME || `word-app-service`
+const welcome_message = process.env.WELCOME_MESSAGE || `Hello, your random word:`
 
 const page=`
 <!DOCTYPE html>
@@ -15,7 +16,7 @@ const page=`
 </head>
 <body>
     <main class="container">
-        <h1>Hello, your random word:</h1>
+        <h1>${welcome_message}</h1>
         <article>{{WORD}}</article>
     </main>
 </body>
