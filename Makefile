@@ -11,14 +11,13 @@ KIND_CLUSTER_CONFIG=./kind-config.yaml
 KIND_CLUSTER_NAME=word-app-demo
 KIND_KUBECONFIG=kind-kubeconfig.yaml
 
-CONFIGMAP=./manifests/configmap.yaml
-SECRET=./manifests/secret.yaml
+MANIFESTS=./manifests/
 FRONTEND_DEPLOYMENT=./manifests/frontend.yaml
 BACKEND_DEPLOYMENT=./manifests/backend.yaml
 
 EXPOSED_URL=http://localhost:8080
 
-all: kind-up apply-configmap apply-manifests restart-manifests open-url
+all: kind-up apply-manifests restart-deployments open-url
 
 kind-up: create-kind-cluster build-images load-images retrive-kubeconfig
 
@@ -42,28 +41,19 @@ load-images:
 	kind load docker-image $(FRONTEND_IMAGE_NAME) --name $(KIND_CLUSTER_NAME)
 	kind load docker-image $(BACKEND_IMAGE_NAME) --name $(KIND_CLUSTER_NAME)
 
-# To load the kubeconfig type `export KUBECONFIG=${PWD}/<path_to_kubeconfig>`
 retrive-kubeconfig:
 	@echo "Retriving kubeconfig"
 	kind get kubeconfig --name $(KIND_CLUSTER_NAME) > $(KIND_KUBECONFIG)
+	@echo "To load the kubeconfig type export KUBECONFIG=\$$PWD/<path_to_kubeconfig>"
 
-apply-configmap:
-	@echo "Applying configmap to cluster..."
-	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(CONFIGMAP)
+apply-manifests: 
+	@echo "Applying manifests..."
+	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(MANIFESTS)
 
-apply-secret:
-	@echo "Applying configmap to cluster..."
-	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(SECRET)
-
-apply-manifests:
-	@echo "Applying manifests to cluster..."
-	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(FRONTEND_DEPLOYMENT) 
-	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -f $(BACKEND_DEPLOYMENT)
-
-restart-manifests:
-	@echo "Applying manifests to cluster..."
-	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(FRONTEND_DEPLOYMENT) | echo "Warning: restarting manifests failed"
-	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(BACKEND_DEPLOYMENT) | echo "Warning: restarting manifests failed"
+restart-deployments:
+	@echo "Applying deployments to cluster..."
+	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(FRONTEND_DEPLOYMENT) | echo "Warning: restarting deployments failed"
+	kubectl rollout --kubeconfig $(KIND_KUBECONFIG) restart -f $(BACKEND_DEPLOYMENT) | echo "Warning: restarting deployments failed"
 
 open-url:
-	@xdg-open http://localhost:8080 &> /dev/null || open http://localhost:8080 &> /dev/null
+	@xdg-open $(EXPOSED_URL) &> /dev/null || open $(EXPOSED_URL) &> /dev/null
