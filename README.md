@@ -142,7 +142,33 @@ Feel free to explore the [Makefile](./Makefile) to learn more about how easy dep
 
 ## Concepts
 
-Concepts section
+### Container
+
+A container is like a virtual machine. The only difference is, it does not contain an entire operating system but rather uses most of  underlying operating systems components. Therefore, it contains only application relevant data along with the applications dependences, libraries and tools.
+
+### Pod
+
+In Kubernetes, a Pod abstracts one or multiple containers. The abstraction is necessary because multiple containers might need to directly communicate with each other and a Pod enables that functionality as it allows multiple containers to be treated as one unit.
+
+### Node
+
+In Kubernetes, a Node hosts multiple Pods. You can think of the Node being an actual machine that runs some kubernetes infrastructure to be able to host Pods. The process of assigning Pods to Nodes is called scheduling.
+
+### Deployment
+
+In Kubernetes, a Deployment manages a number of identical Pods. In a deployment, you specify how a Pod should look like, what image it should use, what environment variables should be set. A Deployment also enables self healing of Pods as Pods is by definition ephemeral. If you delete a Pod in a Deployment, it will be brought back immediately.
+
+### Service
+
+In Kubernetes, a Service enables Pods to be reachable from other Pods or even from outside the Cluster. A Service is attached to a pod and defines one or multiple exposed endpoints. Whenever you want to talk to a pod in a cluster you need to access to through it's Service. Two types of Services are distinguished, Internal Services and External Services. Internal Services can only be reached from inside the cluster. External Services are equipped with a public ip address and can therefore be reached from outside the cluster.
+
+### Configmap
+
+In Kubernetes, A Configmap stores general configuration for your applications. It can be consumed as environment variables, files in volumes and some other ways.
+
+### Secret
+
+In Kubernetes, A Secret is very similar to a Configmap. The only difference being that a Secret is encrypted and can get information through more ways that just static configurations in a Cofigmap.
 
 ## Further learning
 
