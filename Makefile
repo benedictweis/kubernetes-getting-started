@@ -16,7 +16,7 @@ EXPOSED_URL=http://localhost:$(shell yq '.nodes.[0].extraPortMappings.[0].hostPo
 
 all: kind-up apply-manifests restart-deployments open-url
 
-kind-up: create-kind-cluster build-images load-images retrive-kubeconfig
+kind-up: create-kind-cluster build-images load-images retrieve-kubeconfig
 
 kind-down: delete-kind-cluster
 
@@ -38,7 +38,7 @@ load-images:
 	kind load docker-image $(FRONTEND_IMAGE_NAME) --name $(KIND_CLUSTER_NAME)
 	kind load docker-image $(BACKEND_IMAGE_NAME) --name $(KIND_CLUSTER_NAME)
 
-retrive-kubeconfig:
+retrieve-kubeconfig:
 	@echo "Retriving kubeconfig"
 	kind get kubeconfig --name $(KIND_CLUSTER_NAME) > $(KIND_KUBECONFIG)
 	@echo "To load the kubeconfig type export KUBECONFIG=\$$PWD/$(KIND_KUBECONFIG)"

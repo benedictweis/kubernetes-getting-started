@@ -1,6 +1,6 @@
 # ⛴️ kubernetes-getting-started
 
-This is an example repository to introduce you to kubernetes.It covers core concepts and leaves you wit an solid foundation, from which you can build you own app or extend your kubernetes knowledge.
+This is an example repository to introduce you to Kubernetes. It covers core concepts and leaves you with a solid foundation, from which you can build your own app or extend your Kubernetes knowledge.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ All of the shell commands mentioned in this document are meant to be run from th
 
 ### Software
 
-- Macos, Linux or Windows with [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)
+- macOS, Linux or Windows with [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)
 - [Docker](https://www.docker.com) for building images
 - [kind](https://kind.sigs.k8s.io) for setting up a local cluster
 - [kubectl](https://kubernetes.io/docs/reference/kubectl) for interacting with the cluster
@@ -25,21 +25,20 @@ All of the shell commands mentioned in this document are meant to be run from th
 
 Examine the two folders [backend](./backend/) and [frontend](./frontend/).
 
-[backend](./backend/) contains a nodejs application that exposes a `/hello` endpoint. The endpoint returns a random word from a predefined list each time it is called.
+[backend](./backend/) contains a NodeJS application that exposes a `/hello` endpoint. The endpoint returns a random word from a predefined list each time it is called.
 
-[frontend](./frontend/) also contains a nodejs application that serves a website where a random word from [backend](./backend/) is presented to the user.
+[frontend](./frontend/) also contains a NodeJS application that serves a website where a random word from [backend](./backend/) is presented to the user.
 
 A user request will be handled as follows:
 
 <img src="architecture.drawio.png" width=40% alt="architecture diagram">
+What is Kubernetes?
 
-## What is kubernetes?
-
-Kubernetes is a container orchestrator. It manages communication between containers, scaling containers, dns, container lifecycle and much more. Kubernetes itself is made up of many smaller components although when talking about "the kubernetes way", kubernetes is more commonly associated with a set of principles that it is with a piece of software. Kubernetes is mostly used to deploy a containerized microservices architecture. It is itself very flexible an can be adapted to face almost all system deployment challenges.
+Kubernetes is a container orchestrator. It manages communication between containers, scaling containers, DNS, container lifecycle and much more. Kubernetes itself is made up of many smaller components although when talking about "the Kubernetes way", Kubernetes is more commonly associated with a set of principles that it is with a piece of software. Kubernetes is mostly used to deploy a containerized microservices architecture. It is itself very flexible an can be adapted to face almost all system deployment challenges.
 
 ### Kubernetes Components
 
-The biggest unit in kubernetes is the cluster. A cluster is made up of a collection of nodes (which are basically just worker machines). A node hosts a collection of pods which again are a collection of associated containers, although it is rather common that a pod only contains a single container. This container can be compared to a familiar docker container.
+The biggest unit in Kubernetes is the cluster. A cluster is made up of a collection of nodes (which are basically just worker machines). A node hosts a collection of pods which again are a collection of associated containers, although it is rather common that a pod only contains a single container. This container can be compared to a familiar docker container.
 
 ## Obtaining a cluster
 
@@ -47,7 +46,7 @@ For development purposes, you are going to need a cluster. You can obtain a clus
 
 - From hyperscalers such as AWS, GCP, AKS, AliCloud etc.
   - this is usually very expensive but there is a list for [obtaining free trial clusters for a lot of different hyperscalers](https://github.com/learnk8s/free-kubernetes)
-- From Kubernetes as a Service providers such as [Gardener](https://gardener.cloud) or [Rancher](https://www.rancher.com)
+- From "Kubernetes as a Service" providers such as [Gardener](https://gardener.cloud) or [Rancher](https://www.rancher.com)
   - this is typically reserved for enterprise customers with high demands as these solutions scale out to hundreds, thousands or even tens of thousands of clusters
 - Locally with
   - [Kind](https://kind.sigs.k8s.io)
@@ -55,7 +54,7 @@ For development purposes, you are going to need a cluster. You can obtain a clus
 
 We will be using kind in this example.
 
-Staring a local kubernetes cluster with kind is as simple as running:
+Staring a local Kubernetes cluster with kind is as simple as running:
 
 ```bash
 kind create cluster
@@ -104,9 +103,9 @@ to load the images into the kind cluster.
 
 ### Retrieve kubeconfig
 
-To interact with the kuberentes cluster via `kubectl` (and other similar tools). You need to retrive a so called `kubeconfig` from the cluster. It contains values such as the hostname of the cluster along with some keys for verifying authority when executing actions on the cluster.
+To interact with the Kubernetes cluster via `kubectl` (and other similar tools). You need to retrieve a so-called `kubeconfig` from the cluster. It contains values such as the hostname of the cluster along with some keys for verifying authority when executing actions on the cluster.
 
-Retrieving your kubeconfig is usually a process that is specifiy to your provider (see [Obtaining a cluster](#obtaining-a-cluster)). In our case, kind provides an easy way of retrieving your kubeconfig:
+Retrieving your kubeconfig is usually a process that is specific to your provider (see [Obtaining a cluster](#obtaining-a-cluster)). In our case, Kind provides an easy way of retrieving your kubeconfig:
 
 ```bash
 kind get kubeconfig --name word-app-demo > kind-kubeconfig.yaml
@@ -127,24 +126,24 @@ export KUBECONFIG=$PWD/kind-kubeconfig.yaml
 
 ### Applying the deployment
 
-There is only one step left, actually deploying the application. To do this, examine the files contained in [`./manifests/`](./manifests/). Focus on the [`./manifests/frontend.yaml`](./manifests/frontend.yaml) and [`./manifests/backend.yaml`](./manifests/backend.yaml) files. They will be explained later in this guide. For now we will simply apply the entire manifest folder to the cluster because it contains additional files that will also be explained later in this guide.
+There is only one step left, actually deploying the application. To do this, examine the files contained in [`./manifests/`](./manifests/). Focus on the [`./manifests/frontend.yaml`](./manifests/frontend.yaml) and [`./manifests/backend.yaml`](./manifests/backend.yaml) files. They will be explained later in this guide. For now, we will simply apply the entire manifest folder to the cluster because it contains additional files that will also be explained later in this guide.
 
 ```bash
 kubectl apply -f ./manifests/
 ```
 
 > [!NOTE]
-> The order in which the manifests are applied is completely irrelevant. This is because of one of kubernetes core concepts, self healing.
+> The order in which the manifests are applied is completely irrelevant. This is because of one of Kubernetes core concepts, self healing.
 
-At this point you can visit [localhost:8080](http://localhost:8080) and examine the running application.
+At this point, you can visit [localhost:8080](http://localhost:8080) and examine the running application.
 
-Feel free to explore the [Makefile](./Makefile) to learn more about how easy deploying with kubernetes is.
+Feel free to explore the [Makefile](./Makefile) to learn more about how easy deploying with Kubernetes is.
 
 ## Concepts
 
 ### Container
 
-A container is like a virtual machine. The only difference is, it does not contain an entire operating system but rather uses most of  underlying operating systems components. Therefore, it contains only application relevant data along with the applications dependences, libraries and tools.
+A container is like a virtual machine. The only difference is, that it does not contain an entire operating system but rather uses most of the underlying operating system components. Therefore, it contains only application-relevant data along with the application dependencies, libraries and tools.
 
 ### Pod
 
@@ -152,23 +151,23 @@ In Kubernetes, a Pod abstracts one or multiple containers. The abstraction is ne
 
 ### Node
 
-In Kubernetes, a Node hosts multiple Pods. You can think of the Node being an actual machine that runs some kubernetes infrastructure to be able to host Pods. The process of assigning Pods to Nodes is called scheduling.
+In Kubernetes, a Node hosts multiple Pods. You can think of the Node being an actual machine that runs some Kubernetes infrastructure to be able to host Pods. The process of assigning Pods to Nodes is called scheduling.
 
 ### Deployment
 
-In Kubernetes, a Deployment manages a number of identical Pods. In a deployment, you specify how a Pod should look like, what image it should use, what environment variables should be set. A Deployment also enables self healing of Pods as Pods is by definition ephemeral. If you delete a Pod in a Deployment, it will be brought back immediately.
+In Kubernetes, a Deployment manages several identical Pods. In a deployment, you specify how a Pod should look like, what image it should use, and what environment variables should be set. A Deployment also enables the self-healing functionality of Pods, as Pods are by definition ephemeral. If you delete a Pod in a Deployment, it will be brought back immediately.
 
 ### Service
 
-In Kubernetes, a Service enables Pods to be reachable from other Pods or even from outside the Cluster. A Service is attached to a pod and defines one or multiple exposed endpoints. Whenever you want to talk to a pod in a cluster you need to access to through it's Service. Two types of Services are distinguished, Internal Services and External Services. Internal Services can only be reached from inside the cluster. External Services are equipped with a public ip address and can therefore be reached from outside the cluster.
+In Kubernetes, a Service enables Pods to be reachable from other Pods or even from outside the Cluster. A Service is attached to a pod and defines one or multiple exposed endpoints. Whenever you want to talk to a pod in a cluster you need to access it through its Service. Two types of Services are distinguished, Internal Services and External Services. Internal Services can only be reached from inside the cluster. External Services are equipped with a public IP address and can therefore be reached from outside the cluster.
 
-### Configmap
+### ConfigMap
 
-In Kubernetes, A Configmap stores general configuration for your applications. It can be consumed as environment variables, files in volumes and some other ways.
+In Kubernetes, A ConfigMap stores the general configuration for your applications. It can be consumed as environment variables, files in volumes and some other ways.
 
 ### Secret
 
-In Kubernetes, A Secret is very similar to a Configmap. The only difference being that a Secret is encrypted and can get information through more ways that just static configurations in a Cofigmap.
+In Kubernetes, A Secret is very similar to a ConfigMap. The only difference is that a Secret is encrypted and can get information through more ways than just static configurations in a ConfigMap.
 
 ## Further learning
 

@@ -1,20 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: word-app-frontend
-  labels:
-    app: word-app-frontend
 spec:
+  selector:
+    app: word-app-frontend
   type: NodePort
   ports:
   - port: 80
-    name: word-app-frontend
     targetPort: 80
     nodePort: 32757
-  selector:
-    app: word-app-frontend
 ---
 apiVersion: apps/v1
 kind: Deployment
