@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: word-app-service
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: word-app-service-container
+        image: word-app-service
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+          - name: WORDS
+            valueFrom:
+              configMapKeyRef:
+                name: word-app-config
+                key: words
+        

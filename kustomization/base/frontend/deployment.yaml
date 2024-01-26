@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: word-app-frontend
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: word-app-frontend-container
+        image: word-app-frontend
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        env:
+          - name: WELCOME_MESSAGE
+            valueFrom:
+              secretKeyRef:
+                name: word-app-secret
+                key: welcome_message

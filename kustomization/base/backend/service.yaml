@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: word-app-service
+spec:
+  ports:
+  - port: 3000
+    name: word-app-service
+    targetPort: 3000
