@@ -5,5 +5,3 @@ metadata:
 spec:
   ports:
   - port: 3000
-    name: word-app-service
-    targetPort: 3000

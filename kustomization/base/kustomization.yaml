@@ -5,13 +5,14 @@ resources:
   - ./backend
   - ./frontend
   - namespace.yaml
-
-namespace: word-app
+  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
 configMapGenerator:
   - name: word-app-config
+    namespace: word-app
     literals:
       - "words=nicht,schlecht,oder"
 
 secretGenerator:
   - name: word-app-secret
+    namespace: word-app

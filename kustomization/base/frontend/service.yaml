@@ -3,8 +3,5 @@ kind: Service
 metadata:
   name: word-app-frontend
 spec:
-  type: LoadBalancer
   ports:
   - port: 80
-    targetPort: 80
-    nodePort: 32757

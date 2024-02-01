@@ -6,6 +6,7 @@ resources:
 
 secretGenerator:
   - name: word-app-secret
+    namespace: word-app
     behavior: replace
     literals:
       - "welcome_message=Welcome, here is your random word:"

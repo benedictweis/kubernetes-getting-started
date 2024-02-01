@@ -5,5 +5,7 @@ resources:
   - deployment.yaml
   - service.yaml
 
+namespace: word-app
+
 commonLabels:
   app: word-app-frontend

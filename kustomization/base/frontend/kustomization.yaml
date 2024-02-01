@@ -4,6 +4,9 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
+  - ingress.yaml
+
+namespace: word-app
 
 commonLabels:
   app: word-app-service
