@@ -72,7 +72,7 @@ kustomize:
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -k $(KUSTOMIZATION)
 
 caddy/start:
-	caddy start --watch
+	caddy start
 
 caddy/stop:
 	caddy stop
