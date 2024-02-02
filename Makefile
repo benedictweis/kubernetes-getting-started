@@ -54,3 +54,25 @@ restart-deployments:
 
 open-url:
 	@xdg-open $(EXPOSED_URL) &> /dev/null || open $(EXPOSED_URL) &> /dev/null
+
+#############################
+#/\/\/\/\/\/\/\/\/\/\/\/\/\/#
+#   KUSTOMIZE   +   CADDY   #
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+#############################
+
+KUSTOMIZATION=./kustomization/overlays/prod
+
+all/kustomize: kind-up kustomize caddy/start
+
+down: kind-down caddy/stop
+
+kustomize:
+	@echo "Applying Kustomization..."
+	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -k $(KUSTOMIZATION)
+
+caddy/start:
+	caddy start --watch
+
+caddy/stop:
+	caddy stop
