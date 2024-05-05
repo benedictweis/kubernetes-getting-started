@@ -15,7 +15,7 @@ All of the shell commands mentioned in this document are meant to be run from th
 ### Software
 
 - macOS, Linux or Windows with [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)
-- [Docker](https://www.docker.com) for building images
+- [Docker](https://www.docker.com) for building images and running a local cluster
 - [kind](https://kind.sigs.k8s.io) for setting up a local cluster
 - [kubectl](https://kubernetes.io/docs/reference/kubectl) for interacting with the cluster
 - Optional: [k9s](https://k9scli.io) for easier troubleshooting and for viewing the cluster
