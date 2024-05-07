@@ -63,11 +63,11 @@ restart-deployments:
 open-url:
 	@xdg-open $(EXPOSED_URL) &> /dev/null || open $(EXPOSED_URL) &> /dev/null
 
-#############################
-#/\/\/\/\/\/\/\/\/\/\/\/\/\/#
-#   KUSTOMIZE   +   CADDY   #
-#\/\/\/\/\/\/\/\/\/\/\/\/\/\#
-#############################
+#################
+#/\/\/\/\/\/\/\/#
+#   KUSTOMIZE   #
+#\/\/\/\/\/\/\/\#
+#################
 
 KUSTOMIZATION=./kustomization/overlays/prod
 KIND_CLUSTER_CONFIG_KUSTOMIZE=./kind-config-kustomize.yaml
