@@ -23,6 +23,8 @@ All of the shell commands mentioned in this document are meant to be run from th
 
 ## 🏁 Introduction
 
+### The example project
+
 Examine the two folders [backend](./backend/) and [frontend](./frontend/).
 
 [backend](./backend/) contains a NodeJS application that exposes a `/hello` endpoint. The endpoint returns a random word from a predefined list each time it is called.
@@ -32,13 +34,14 @@ Examine the two folders [backend](./backend/) and [frontend](./frontend/).
 A user request will be handled as follows:
 
 <img src="architecture.drawio.png" width=40% alt="architecture diagram">
-What is Kubernetes?
 
-Kubernetes is a container orchestrator. It manages communication between containers, scaling containers, DNS, container lifecycle and much more. Kubernetes itself is made up of many smaller components although when talking about "the Kubernetes way", Kubernetes is more commonly associated with a set of principles that it is with a piece of software. Kubernetes is mostly used to deploy a containerized microservices architecture. It is itself very flexible an can be adapted to face almost all system deployment challenges.
+### What is Kubernetes?
+
+Kubernetes is a container orchestrator. It manages communication between containers, scaling containers, DNS, container lifecycle and much more. Kubernetes itself is made up of many smaller components although when talking about "the Kubernetes way", Kubernetes is more commonly associated with a set of principles than it is with a piece of software. Kubernetes is mostly used to deploy a containerized microservices architecture. It is very flexible and can be adapted to face almost all system deployment challenges.
 
 ### Kubernetes Components
 
-The biggest unit in Kubernetes is the cluster. A cluster is made up of a collection of nodes (which are basically just worker machines). A node hosts a collection of pods which again are a collection of associated containers, although it is rather common that a pod only contains a single container. This container can be compared to a familiar docker container.
+The biggest unit in Kubernetes is the cluster. A cluster is made up of a collection of nodes (which are simply worker machines). A node hosts a collection of pods which again are a collection of associated containers, although it is rather common that a pod only contains a single container. This container can be compared to the familiar docker container.
 
 ## Obtaining a cluster
 
@@ -60,13 +63,13 @@ Staring a local Kubernetes cluster with kind is as simple as running:
 kind create cluster
 ```
 
-For this demo, we need to create a slightly more specialized cluster. Create one by running
+For our purposes, we need to create a slightly more specialized cluster. Create one by running
 
 ```bash
 kind create cluster --config kind-config.yaml
 ```
 
-or by using the Makefile (`make create-kind-cluster`).
+or by using the [Makefile](./Makefile) (`make create-kind-cluster`). In general, from this point on, you can issue the commands yourself or use the adjacent [Makefile](./Makefile).
 
 This creates a cluster with a name (`word-app-demo`) and a port forwarding configuration to access our application later in this guide.
 
@@ -88,7 +91,7 @@ docker build -t word-app-service -f ./backend/Dockerfile ./backend
 
 to build the images locally.
 
-Next they have to be inserted into the kind cluster.
+Next, they have to be inserted into the kind cluster.
 
 ### Loading the images into the kind cluster
 
@@ -103,7 +106,7 @@ to load the images into the kind cluster.
 
 ### Retrieve kubeconfig
 
-To interact with the Kubernetes cluster via `kubectl` (and other similar tools). You need to retrieve a so-called `kubeconfig` from the cluster. It contains values such as the hostname of the cluster along with some keys for verifying authority when executing actions on the cluster.
+To interact with the Kubernetes cluster via `kubectl` (and other similar tools). You need to retrieve a so-called kubeconfig from the cluster. It contains values such as the hostname of the cluster along with some keys for verifying authority when executing actions on the cluster.
 
 Retrieving your kubeconfig is usually a process that is specific to your provider (see [Obtaining a cluster](#obtaining-a-cluster)). In our case, Kind provides an easy way of retrieving your kubeconfig:
 
@@ -122,7 +125,7 @@ export KUBECONFIG=$PWD/kind-kubeconfig.yaml
 ```
 
 > [!CAUTION]
-> In a production environment, keep a good overview of your kubeconfigs, accidentally committing them to a public repository could leave an attacker with easy administrative access to your cluster. Be sure to use a timeout for kubeconfigs in a production environment.
+> In a production environment, keep a good overview of your kubeconfigs, accidentally committing them to a public repository could leave an attacker with easy administrative access to your cluster. Be sure to use a lifetime for kubeconfigs in a production environment.
 
 ### Applying the deployment
 
@@ -172,4 +175,5 @@ In Kubernetes, A Secret is very similar to a ConfigMap. The only difference is t
 ## Further learning
 
 - Kubernetes Tutorial for Beginners [Link](https://youtu.be/X48VuDVv0do)
+- Kubernetes in 100 seconds [Link](https://www.youtube.com/watch?v=PziYflu8cB8)
 - Kubernetes Documentation [Link](https://kubernetes.io/docs/concepts/overview/)

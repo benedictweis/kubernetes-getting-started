@@ -14,20 +14,28 @@ BACKEND_DEPLOYMENT=./manifests/backend.yaml
 
 EXPOSED_URL=http://localhost:$(shell yq '.nodes.[0].extraPortMappings.[0].hostPort' $(KIND_CLUSTER_CONFIG))
 
-all: kind-up apply-manifests restart-deployments open-url
+#######################################
+#/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/#
+#   DOCKER   +   KIND   +   KUBECTL   #
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+#######################################
 
-kind-up: create-kind-cluster build-images load-images retrieve-kubeconfig
+all: kind-up apply-manifests open-url
+
+kind-up: create-kind-cluster kind-images
+
+kind-images: build-images load-images retrieve-kubeconfig
 
 kind-down: delete-kind-cluster
+
+create-kind-cluster:
+	@echo "Creating kind cluster"
+	kind create cluster --config $(KIND_CLUSTER_CONFIG) || echo "Warning: kind cluster is already present"
 
 build-images:
 	@echo "Building images..."
 	docker build -t $(FRONTEND_IMAGE_NAME) -f $(FRONTEND)/Dockerfile $(FRONTEND)
 	docker build -t $(BACKEND_IMAGE_NAME) -f $(BACKEND)/Dockerfile $(BACKEND)
-
-create-kind-cluster:
-	@echo "Creating kind cluster"
-	kind create cluster --config $(KIND_CLUSTER_CONFIG) || echo "Warning: kind cluster is already present"
 
 delete-kind-cluster:
 	@echo "Deleting kind cluster"
@@ -62,17 +70,16 @@ open-url:
 #############################
 
 KUSTOMIZATION=./kustomization/overlays/prod
+KIND_CLUSTER_CONFIG_KUSTOMIZE=./kind-config-kustomize.yaml
 
-all/kustomize: kind-up kustomize caddy/start
+kustomize/all: kustomize/kind-up kustomize
 
-down: kind-down caddy/stop
+kustomize/kind-up: kustomize/create-kind-cluster kind-images
+
+kustomize/create-kind-cluster:
+	@echo "Creating kind cluster for kustomize setup"
+	kind create cluster --config $(KIND_CLUSTER_CONFIG_KUSTOMIZE) || echo "Warning: kind cluster is already present"
 
 kustomize:
 	@echo "Applying Kustomization..."
 	kubectl apply --kubeconfig $(KIND_KUBECONFIG) -k $(KUSTOMIZATION)
-
-caddy/start:
-	caddy start
-
-caddy/stop:
-	caddy stop

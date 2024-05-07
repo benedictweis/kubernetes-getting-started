@@ -1,4 +1,0 @@
-word-app.localhost
-
-rewrite / /word-app
-reverse_proxy :8000
