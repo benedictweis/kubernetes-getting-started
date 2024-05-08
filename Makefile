@@ -63,6 +63,9 @@ restart-deployments:
 open-url:
 	@xdg-open $(EXPOSED_URL) &> /dev/null || open $(EXPOSED_URL) &> /dev/null
 
+verify:
+	sh tests/test-e2e.sh
+
 #################
 #/\/\/\/\/\/\/\/#
 #   KUSTOMIZE   #
